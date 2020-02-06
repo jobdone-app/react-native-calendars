@@ -421,7 +421,11 @@ export default class AgendaView extends Component {
       ) : (
         <View style={this.styles.knob} />
       );
-      knob = this.state.calendarScrollable ? null : (
+      knob = this.state.calendarScrollable ? (
+        <View style={this.styles.knobContainer}>
+          <View ref={c => (this.knob = c)}>{knobView}</View>
+        </View>
+      ) : (
         <View style={this.styles.knobContainer}>
           <View ref={c => (this.knob = c)}>{knobView}</View>
         </View>
