@@ -120,7 +120,7 @@ export default class AgendaView extends Component {
   }
 
   calendarOffset() {
-    return 40
+    return 100
   }
 
   initialScrollPadPosition() {
@@ -405,9 +405,9 @@ export default class AgendaView extends Component {
 
     return (
       <View onLayout={this.onLayout} style={[this.props.style, {flex: 1, overflow: 'hidden'}]}>
-        {/* <View style={this.styles.reservations}>
-          {this.renderReservations()}
-        </View> */}
+        {this.props.renderReservations ? <View style={this.styles.reservations}>
+          {this.props.renderReservations()}
+        </View>: null}
         <Animated.View style={headerStyle}>
           <Animated.View  style={{flex:1, transform: [{translateY: contentTranslate}]}}>
             <CalendarList

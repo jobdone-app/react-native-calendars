@@ -146,7 +146,7 @@ class CalendarHeader extends Component {
     const webProps = Platform.OS === 'web' ? {'aria-level': this.props.webAriaLevel} : {};
     return (
       <View style={this.props.style}>
-        <View style={this.style.header}>
+        {/* <View style={this.style.header}>
           {leftArrow}
           <View style={{flexDirection: 'row'}}>
             <Text
@@ -160,7 +160,7 @@ class CalendarHeader extends Component {
             {indicator}
           </View>
           {rightArrow}
-        </View>
+        </View> */}
         {
           !this.props.hideDayNames &&
           <View style={this.style.week}>
