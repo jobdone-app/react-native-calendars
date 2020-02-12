@@ -94,7 +94,6 @@ class CalendarList extends Component {
         rows.push(rangeDateStr);
       }
     }
-
     this.state = {
       rows,
       texts,
@@ -115,6 +114,7 @@ class CalendarList extends Component {
     }
   }
 
+
   scrollToDay(d, offset, animated,callback) {
     const day = parseDate(d);
     const diffMonths = Math.round(this.state.openDate.clone().setDate(1).diffMonths(day.clone().setDate(1)));
@@ -128,7 +128,7 @@ class CalendarList extends Component {
       for (let i = 0; i < days.length; i++) {
         week = Math.floor(i / 7);
         if (dateutils.sameDate(days[i], day)) {
-          scrollAmount += 46 * week;
+          scrollAmount += 75 * week;
           break;
         }
       }
@@ -155,7 +155,7 @@ class CalendarList extends Component {
   UNSAFE_componentWillReceiveProps(props) {
     const current = parseDate(this.props.current);
     const nextCurrent = parseDate(props.current);
-    
+    console.log("Will recieve => "+current,nextCurrent)
     if (nextCurrent && current && nextCurrent.getTime() !== current.getTime()) {
       this.scrollToMonth(nextCurrent);
     }
@@ -174,6 +174,7 @@ class CalendarList extends Component {
     this.setState({
       rows: newrows
     });
+
   }
 
   onViewableItemsChanged({viewableItems}) {
@@ -216,6 +217,7 @@ class CalendarList extends Component {
   }
 
   renderCalendar({item}) {
+    console.log("1 =>",item)
     return (
       <CalendarListItem
         scrollToMonth={this.scrollToMonth.bind(this)}

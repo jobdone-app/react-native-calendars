@@ -24,13 +24,23 @@ export default function styleConstructor(theme = {}) {
       position: 'absolute',
       left: 0,
       right: 0,
-      height: 20,
+      height: 15,
       bottom: 0,
-      marginHorizontal: 12,
-      borderBottomLeftRadius: 10,
-      borderBottomRightRadius: 10,
+      shadowOpacity: 0.26,
+      shadowRadius: 2,
+      shadowOffset: {
+        width: 0,
+        height: 3,
+      },
+      marginBottom: 2,
+      shadowColor: 'rgb(59,97,163)',
+      borderColor: 'rgba(22,36,61,0.2)',
+      elevation: 4,
+      borderBottomLeftRadius: 30,
+      borderBottomRightRadius: 30,
       backgroundColor : 'white',
       alignItems: 'center',
+      justifyContent : 'center'
     },
     weekday: {
       width: 32,
@@ -42,7 +52,7 @@ export default function styleConstructor(theme = {}) {
     },
     reservations: {
       flex: 1,
-      marginTop: 104,
+      marginTop: 130,
       backgroundColor: appStyle.backgroundColor
     },
     ...(theme[STYLESHEET_ID] || {})

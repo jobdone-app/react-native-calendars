@@ -14,13 +14,13 @@ class CalendarListItem extends Component {
 
   constructor(props) {
     super(props);
-
     this.style = styleConstructor(props.theme);
   }
 
   shouldComponentUpdate(nextProps) {
     const r1 = this.props.item;
     const r2 = nextProps.item;
+    console.log(r1,r2);
     return r1.toString('yyyy MM') !== r2.toString('yyyy MM') || !!(r2.propbump && r2.propbump !== r1.propbump);
   }
 

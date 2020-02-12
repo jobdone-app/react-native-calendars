@@ -284,7 +284,7 @@ class Calendar extends Component {
           disableArrowLeft={this.props.disableArrowLeft}
           disableArrowRight={this.props.disableArrowRight}
         />
-        <View style={this.style.monthView}>{weeks}</View>
+        <View style={this.style.monthView,{marginBottom : 50}}>{weeks}</View>
       </View>);
   }
 }

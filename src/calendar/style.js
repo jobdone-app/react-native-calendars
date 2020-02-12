@@ -18,6 +18,7 @@ export default function getStyle(theme={}) {
       marginTop: 7,
       marginBottom: 7,
       height:60,
+      backgroundColor : 'white',
       flexDirection: 'row',
       justifyContent: 'space-around'
     },

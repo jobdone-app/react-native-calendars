@@ -5,7 +5,9 @@ import XDate from 'xdate';
 import PropTypes from 'prop-types';
 import styleConstructor from './style';
 import {weekDayNames} from '../../dateutils';
+import {FontStyle} from '../../../../../src/styles';
 import {CHANGE_MONTH_LEFT_ARROW, CHANGE_MONTH_RIGHT_ARROW} from '../../testIDs';
+import { Colors } from '../../../../../src/constants';
 
 
 class CalendarHeader extends Component {
@@ -170,7 +172,7 @@ class CalendarHeader extends Component {
                 allowFontScaling={false}
                 key={idx}
                 accessible={false}
-                style={this.style.dayHeader}
+                style={[this.style.dayHeader,FontStyle.monoropeBold_13,{color : Colors.darkBlueGrey}]}
                 numberOfLines={1}
                 importantForAccessibility='no'
               >
