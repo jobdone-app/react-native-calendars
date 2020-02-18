@@ -123,7 +123,6 @@ export default class AgendaView extends Component {
   calendarOffset() {
     return 60
   }
-
   initialScrollPadPosition() {
     return Math.max(0, this.viewHeight - HEADER_HEIGHT);
   }
@@ -224,6 +223,10 @@ export default class AgendaView extends Component {
   }
 
   UNSAFE_componentWillReceiveProps(props) {
+    if (this.props.onArrowPress && !this.state.calendarScrollable) {
+      this._chooseDayFromCalendar(props.selected);
+      //this.calendar.scrollToDay(this.state.selectedDay.clone(), this.calendarOffset(), false, (amount) => {console.log("Scroll amount",amount)});
+    }
     if (props.items) {
       this.setState({
         firstResevationLoad: false
@@ -249,7 +252,7 @@ export default class AgendaView extends Component {
     // in CalendarList listView, but that might impact performance when scrolling
     // month list in expanded CalendarList.
     // Further info https://github.com/facebook/react-native/issues/1831
-    this.calendar.scrollToDay(this.state.selectedDay, this.calendarOffset() + 1, true);
+    this.calendar.scrollToDay(this.state.selectedDay, this.calendarOffset(), true);
   }
 
   _chooseDayFromCalendar(d) {
@@ -340,7 +343,7 @@ export default class AgendaView extends Component {
 
   render() {
     this.currentMonth = parseDate(this.props.selected) || XDate(true);
-    console.log("render agenda "+ this.state.selectedDay,this.currentMonth)
+    
     const agendaHeight = this.initialScrollPadPosition();
     const weekDaysNames = dateutils.weekDayNames(this.props.firstDay);
     
@@ -426,6 +429,7 @@ export default class AgendaView extends Component {
               current={this.currentMonth}
               markedDates={this.generateMarkings()}
               markingType={this.props.markingType}
+              onMonthChange={(month) => {}}
               removeClippedSubviews={this.props.removeClippedSubviews}
               onDayPress={this._chooseDayFromCalendar.bind(this)}
               scrollingEnabled={this.state.calendarScrollable}

@@ -10,6 +10,7 @@ import Calendar from '../calendar';
 import CalendarListItem from './item';
 import CalendarHeader from '../calendar/header/index';
 import {STATIC_HEADER} from '../testIDs';
+import CommonFunctions from '../../../../src/utils/CommonFunctions';
 
 
 const {width} = Dimensions.get('window');
@@ -119,7 +120,7 @@ class CalendarList extends Component {
     const day = parseDate(d);
     const diffMonths = Math.round(this.state.openDate.clone().setDate(1).diffMonths(day.clone().setDate(1)));
     const size = this.props.horizontal ? this.props.calendarWidth : this.props.calendarHeight;
-    let scrollAmount = (size * this.props.pastScrollRange) + (diffMonths * size) + (offset || 0);
+    let scrollAmount = (size * this.props.pastScrollRange) + (0 * size) + (offset || 0);
     
     if (!this.props.horizontal) {
       let week = 0;
@@ -133,6 +134,7 @@ class CalendarList extends Component {
         }
       }
     }
+    console.log("Scroll amt",scrollAmount)
     if (callback) {
       callback(scrollAmount);
     }
@@ -148,14 +150,12 @@ class CalendarList extends Component {
     let diffMonths = Math.round(this.state.openDate.clone().setDate(1).diffMonths(scrollTo.clone().setDate(1)));
     const size = this.props.horizontal ? this.props.calendarWidth : this.props.calendarHeight;
     const scrollAmount = (size * this.props.pastScrollRange) + (diffMonths * size);
-
     this.listView.scrollToOffset({offset: scrollAmount, animated: false});
   }
 
   UNSAFE_componentWillReceiveProps(props) {
     const current = parseDate(this.props.current);
     const nextCurrent = parseDate(props.current);
-    console.log("Will recieve => "+current,nextCurrent)
     if (nextCurrent && current && nextCurrent.getTime() !== current.getTime()) {
       this.scrollToMonth(nextCurrent);
     }
@@ -166,7 +166,7 @@ class CalendarList extends Component {
     for (let i = 0; i < rowclone.length; i++) {
       let val = this.state.texts[i];
       if (rowclone[i].getTime) {
-        val = rowclone[i].clone();
+        val = nextCurrent
         val.propbump = rowclone[i].propbump ? rowclone[i].propbump + 1 : 1;
       }
       newrows.push(val);
@@ -174,7 +174,6 @@ class CalendarList extends Component {
     this.setState({
       rows: newrows
     });
-
   }
 
   onViewableItemsChanged({viewableItems}) {
@@ -217,7 +216,6 @@ class CalendarList extends Component {
   }
 
   renderCalendar({item}) {
-    console.log("1 =>",item)
     return (
       <CalendarListItem
         scrollToMonth={this.scrollToMonth.bind(this)}
@@ -280,7 +278,7 @@ class CalendarList extends Component {
 
       return (
         <CalendarHeader
-          style={[this.style.staticHeader, this.props.headerStyle]}
+          style={[this.style.staticHeader, this.props.headerStyle,{backgroundColor: 'red',}]}
           month={this.state.currentMonth}
           addMonth={this.addMonth}
           showIndicator={indicator}
