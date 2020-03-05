@@ -17,10 +17,11 @@ export default function getStyle(theme={}) {
     week: {
       marginTop: 7,
       marginBottom: 7,
-      height:60,
+      height:70,
       backgroundColor : 'white',
       flexDirection: 'row',
-      justifyContent: 'space-around'
+      justifyContent: 'space-around',
+      overflow: 'hidden',
     },
     ...(theme[STYLESHEET_ID] || {})
   });

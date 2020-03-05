@@ -129,7 +129,7 @@ class CalendarList extends Component {
       for (let i = 0; i < days.length; i++) {
         week = Math.floor(i / 7);
         if (dateutils.sameDate(days[i], day)) {
-          scrollAmount += 75 * week;
+          scrollAmount += 85 * week;
           break;
         }
       }

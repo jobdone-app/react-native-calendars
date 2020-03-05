@@ -40,7 +40,7 @@ export default function styleConstructor(theme = {}) {
       borderBottomRightRadius: 30,
       backgroundColor : 'white',
       alignItems: 'center',
-      justifyContent : 'center'
+      justifyContent : 'center',
     },
     weekday: {
       width: 32,
