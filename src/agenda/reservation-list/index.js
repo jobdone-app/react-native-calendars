@@ -45,7 +45,7 @@ class ReservationList extends Component {
     
     this.heights=[];
     this.selectedDay = this.props.selectedDay;
-    this.scrollOver = true;
+    this.scrollOver = false;
   }
 
   UNSAFE_componentWillMount() {
@@ -184,15 +184,18 @@ class ReservationList extends Component {
     return (
       <SectionList
         ref={(c) => this.sectionListRef = c}
-        scrollEventThrottle={200}
+        scrollEventThrottle={100}
         onMoveShouldSetResponderCapture={() => {this.onListTouch(); return false;}}
         onViewableItemsChanged={({ viewableItems }) => {
-          if (viewableItems && viewableItems.length > 0 && !this.props.isDayPress) {
-            viewableItems[0].item.title
+          if (viewableItems && viewableItems.length > 0 && !this.props.isDayPress ) {
+            viewableItems[0].item.title && this.scrollOver
               ?  this.props.onChangeDate(viewableItems[0].item.title)
               : null;
           }
       }}
+        onScrollToIndexFailed = {(info) => {
+          console.log("onScrollToIndexFailed",info)
+        }}
         contentContainerStyle = {{flexGrow : 1}}
         sections={this.props.renderSection}  
         renderItem={this.props.renderItem}  

@@ -229,7 +229,7 @@ export default class AgendaView extends Component {
   UNSAFE_componentWillReceiveProps(props) {
     if (this.props.onArrowPress && !this.state.calendarScrollable) {
       this._chooseDayFromCalendar(props.selected);
-      this.calendar.scrollToDay(this.state.selectedDay.clone(), this.calendarOffset(), false, (amount) => {console.log("Scroll amount",amount)});
+      this.calendar.scrollToDay(this.state.selectedDay.clone(), this.calendarOffset(), false, (amount) => {});
     }
     if (props.items) {
       this.setState({
@@ -269,12 +269,14 @@ export default class AgendaView extends Component {
     const scrollIndex = this.props.renderSection.findIndex(
       (item) => item.title === date
     );
-    this.list && this.list.sectionListRef &&
+    this.chooseDay(d, !this.state.calendarScrollable);
+    setTimeout(() => {
+      this.list && this.list.sectionListRef &&
       this.list.sectionListRef.scrollToLocation({
         sectionIndex: scrollIndex,
-        itemIndex: 0
+        itemIndex: -1
       });
-    this.chooseDay(d, !this.state.calendarScrollable);
+    }, 1000);
   }
 
   chooseDay(d, optimisticScroll) {
@@ -307,7 +309,6 @@ export default class AgendaView extends Component {
     }
   }
   componentDidUpdate(prevProps, prevState) {
-    console.log('componentDidUpdate',this.state.isDayPress)
     if (this.state.isDayPress) {
       setTimeout(() => {
         this.setState({isDayPress : false})
