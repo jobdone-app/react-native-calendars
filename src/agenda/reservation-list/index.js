@@ -1,16 +1,15 @@
-import React, {Component} from 'react';
-import {FlatList, ActivityIndicator, View} from 'react-native';
+import React, {Component,createRef} from 'react';
+import {SectionList, View} from 'react-native';
 import Reservation from './reservation';
 import PropTypes from 'prop-types';
 import XDate from 'xdate';
-
 import dateutils from '../../dateutils';
 import styleConstructor from './style';
 
 
 class ReservationList extends Component {
   static displayName = 'IGNORE';
-  
+  static sectionListRef = React.createRef();
   static propTypes = {
     // specify your item comparison function for increased performance
     rowHasChanged: PropTypes.func,
@@ -82,7 +81,7 @@ class ReservationList extends Component {
       });
     } else {
       this.updateReservations(props);
-    }
+    }    
   }
 
   onScroll(event) {
@@ -182,30 +181,26 @@ class ReservationList extends Component {
   }
 
   render() {
-    if (!this.props.reservations || !this.props.reservations[this.props.selectedDay.toString('yyyy-MM-dd')]) {
-      if (this.props.renderEmptyData) {
-        return this.props.renderEmptyData();
-      }
-      return (
-        <ActivityIndicator style={{marginTop: 80}} color={this.props.theme && this.props.theme.indicatorColor}/>
-      );
-    }
     return (
-      <FlatList
-        ref={(c) => this.list = c}
-        style={this.props.style}
-        contentContainerStyle={this.styles.content}
-        renderItem={this.renderRow.bind(this)}
-        data={this.state.reservations}
-        onScroll={this.onScroll.bind(this)}
-        showsVerticalScrollIndicator={false}
+      <SectionList
+        ref={(c) => this.sectionListRef = c}
         scrollEventThrottle={200}
         onMoveShouldSetResponderCapture={() => {this.onListTouch(); return false;}}
-        keyExtractor={(item, index) => String(index)}
-        refreshControl={this.props.refreshControl}
-        refreshing={this.props.refreshing || false}
-        onRefresh={this.props.onRefresh}
-      />
+        onViewableItemsChanged={({ viewableItems }) => {
+          if (viewableItems && viewableItems.length > 0 && !this.props.isDayPress) {
+            viewableItems[0].item.title
+              ?  this.props.onChangeDate(viewableItems[0].item.title)
+              : null;
+          }
+      }}
+        contentContainerStyle = {{flexGrow : 1}}
+        sections={this.props.renderSection}  
+        renderItem={this.props.renderItem}  
+        renderSectionHeader={({
+        section: { date, month, year, data }
+            }) => this.props.renderSectionHeader(date, month, year, data)} 
+        keyExtractor={(item, index) => index}  
+    />  
     );
   }
 }

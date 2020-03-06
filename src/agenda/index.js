@@ -27,7 +27,7 @@ const viewPropTypes = ViewPropTypes || View.propTypes;
  */
 export default class AgendaView extends Component {
   static displayName = 'Agenda';
-
+  static onNewDayPress = false;
   static propTypes = {
     /** Specify theme properties to override specific styles for calendar parts. Default = {} */
     theme: PropTypes.object,
@@ -89,7 +89,6 @@ export default class AgendaView extends Component {
 
   constructor(props) {
     super(props);
-
     this.styles = styleConstructor(props.theme);
 
     const windowSize = Dimensions.get('window');
@@ -103,6 +102,7 @@ export default class AgendaView extends Component {
       calendarIsReady: false,
       scrollAmount : this.viewHeight,
       calendarScrollable: false,
+      isDayPress : false,
       firstResevationLoad: false,
       selectedDay: parseDate(this.props.selected) || XDate(true),
       topDay: parseDate(this.props.selected) || XDate(true)
@@ -120,6 +120,9 @@ export default class AgendaView extends Component {
     this.state.scrollY.addListener(({value}) => {this.knobTracker.add(value);console.wa});
   }
   
+  resetIsDayPress = () => {
+    this.setState({isDayPress : false})
+  }
   calendarOffset() {
     return 60
   }
@@ -201,9 +204,7 @@ export default class AgendaView extends Component {
     }
   }
 
-  onChangeDate = (day) => {
-    this.calendar.scrollToDay(day, this.calendarOffset(), true,(amout) => {this.setState({scrollAmount : this.viewHeight - HEADER_HEIGHT + 70 -amout})});
-  }
+  
   loadReservations(props) {
     if ((!props.items || !Object.keys(props.items).length) && !this.state.firstResevationLoad) {
       this.setState({
@@ -228,7 +229,7 @@ export default class AgendaView extends Component {
   UNSAFE_componentWillReceiveProps(props) {
     if (this.props.onArrowPress && !this.state.calendarScrollable) {
       this._chooseDayFromCalendar(props.selected);
-      //this.calendar.scrollToDay(this.state.selectedDay.clone(), this.calendarOffset(), false, (amount) => {console.log("Scroll amount",amount)});
+      this.calendar.scrollToDay(this.state.selectedDay.clone(), this.calendarOffset(), false, (amount) => {console.log("Scroll amount",amount)});
     }
     if (props.items) {
       this.setState({
@@ -242,7 +243,7 @@ export default class AgendaView extends Component {
   enableCalendarScrolling() {
     this.setState({
       calendarScrollable: true
-    },() => this.props.isCalenderExpendable(true));
+    });
 
     if (this.props.onCalendarToggled) {
       this.props.onCalendarToggled(true);
@@ -259,15 +260,29 @@ export default class AgendaView extends Component {
   }
 
   _chooseDayFromCalendar(d) {
+    let date = d;
+    if (typeof(d) === 'string') {
+      date = d;
+    }else{
+      date = parseDate(d).clone().toString('yyyy-MM-dd')
+    }
+    const scrollIndex = this.props.renderSection.findIndex(
+      (item) => item.title === date
+    );
+    this.list && this.list.sectionListRef &&
+      this.list.sectionListRef.scrollToLocation({
+        sectionIndex: scrollIndex,
+        itemIndex: 0
+      });
     this.chooseDay(d, !this.state.calendarScrollable);
   }
 
   chooseDay(d, optimisticScroll) {
     const day = parseDate(d);
-    
     this.setState({
       calendarScrollable: false,
-      selectedDay: day.clone()
+      selectedDay: day.clone(),
+      isDayPress : typeof(d) === 'string' ? false : true
     });
 
     if (this.props.onCalendarToggled) {
@@ -291,27 +306,45 @@ export default class AgendaView extends Component {
       this.props.onDayPress(xdateToData(day));
     }
   }
+  componentDidUpdate(prevProps, prevState) {
+    console.log('componentDidUpdate',this.state.isDayPress)
+    if (this.state.isDayPress) {
+      setTimeout(() => {
+        this.setState({isDayPress : false})
+      }, 1500);
+    }
+  }
+  onscrollAmt = () => {
 
+  }
   renderReservations() {
     return (
       <ReservationsList
-        refreshControl={this.props.refreshControl}
-        refreshing={this.props.refreshing}
-        onRefresh={this.props.onRefresh}
-        rowHasChanged={this.props.rowHasChanged}
-        renderItem={this.props.renderItem}
-        renderDay={this.props.renderDay}
-        renderEmptyDate={this.props.renderEmptyDate}
-        reservations={this.props.items}
-        selectedDay={this.state.selectedDay}
-        renderEmptyData={this.props.renderEmptyData}
-        topDay={this.state.topDay}
-        onDayChange={this.onDayChange.bind(this)}
-        onScroll={() => {}}
-        ref={(c) => this.list = c}
+        onScroll={this.onscrollAmt}
         theme={this.props.theme}
+        ref={(c) => this.list = c}
+        topDay={this.state.topDay}
+        reservations={this.props.items}
+        onRefresh={this.props.onRefresh}
+        renderDay={this.props.renderDay}
+        refreshing={this.props.refreshing}
+        renderItem={this.props.renderItem}
+        selectedDay={this.state.selectedDay}
+        onChangeDate = {this.onChangeDate}
+        isDayPress = {this.state.isDayPress}
+        rowHasChanged={this.props.rowHasChanged}
+        onDayChange={this.onDayChange.bind(this)}
+        renderSection = {this.props.renderSection}
+        refreshControl={this.props.refreshControl}
+        renderEmptyDate={this.props.renderEmptyDate}
+        renderEmptyData={this.props.renderEmptyData}
+        renderSectionHeader = {this.props.renderSectionHeader}
       />
     );
+  }
+
+  onChangeDate = (day) => {
+    this.calendar.scrollToDay(day, this.calendarOffset(), true,(amout) => {this.setState({scrollAmount : this.viewHeight - HEADER_HEIGHT + 70 -amout,selectedDay : parseDate(day)})});
   }
 
   onDayChange(day) {
@@ -340,7 +373,8 @@ export default class AgendaView extends Component {
       });
     }
 
-    return {...markings, ...{selected: true}};
+    const key = this.state.selectedDay.toString('yyyy-MM-dd');
+    return {...markings, [key]: {...(markings[key] || {}), ...{selected: true}}};
   }
 
   render() {
@@ -412,8 +446,8 @@ export default class AgendaView extends Component {
     const shouldHideExtraDays = this.state.calendarScrollable ? this.props.hideExtraDays : false;
     return (
       <View onLayout={this.onLayout} style={[this.props.style, {flex: 1, overflow: 'hidden'}]}>
-        {this.props.renderReservations ? <View style={this.styles.reservations}>
-          {this.props.renderReservations()}
+        {this.props.renderSection ? <View style={this.styles.reservations}>
+          {this.renderReservations()}
         </View>: null}
         <Animated.View style={headerStyle}>
           <Animated.View  style={{flex:1, backgroundColor : 'white', transform: [{translateY: contentTranslate}]}}>
