@@ -270,13 +270,21 @@ export default class AgendaView extends Component {
       (item) => item.title === date
     );
     this.chooseDay(d, !this.state.calendarScrollable);
-    setTimeout(() => {
+    if (typeof(d) === 'string') {
+      setTimeout(() => {
+        this.list && this.list.sectionListRef &&
+        this.list.sectionListRef.scrollToLocation({
+          sectionIndex: scrollIndex,
+          itemIndex: 0
+        });
+      }, 100);
+    }else{
       this.list && this.list.sectionListRef &&
-      this.list.sectionListRef.scrollToLocation({
-        sectionIndex: scrollIndex,
-        itemIndex: -1
-      });
-    }, 1000);
+        this.list.sectionListRef.scrollToLocation({
+          sectionIndex: scrollIndex,
+          itemIndex: 0
+        });
+    }
   }
 
   chooseDay(d, optimisticScroll) {
