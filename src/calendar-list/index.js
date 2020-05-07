@@ -117,6 +117,7 @@ class CalendarList extends Component {
 
 
   scrollToDay(d, offset, animated,callback) {
+    
     const day = parseDate(d);
     const diffMonths = Math.round(this.state.openDate.clone().setDate(1).diffMonths(day.clone().setDate(1)));
     const size = this.props.horizontal ? this.props.calendarWidth : this.props.calendarHeight;

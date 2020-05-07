@@ -188,8 +188,8 @@ class ReservationList extends Component {
         onMoveShouldSetResponderCapture={() => {this.onListTouch(); return false;}}
         onViewableItemsChanged={({ viewableItems }) => {
           if (viewableItems && viewableItems.length > 0 && !this.props.isDayPress ) {
-            viewableItems[0].item.title && this.scrollOver
-              ?  this.props.onChangeDate(viewableItems[0].item.title)
+            viewableItems[0].section.title && this.scrollOver
+              ?  this.props.onChangeDate(viewableItems[0].section.title)
               : null;
           }
       }}

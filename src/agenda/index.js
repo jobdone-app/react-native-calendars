@@ -149,6 +149,7 @@ export default class AgendaView extends Component {
   onLayout(event) {
     this.viewHeight = event.nativeEvent.layout.height;
     this.viewWidth = event.nativeEvent.layout.width;
+    
     this.calendar.scrollToDay(
       this.state.selectedDay.clone(),
       this.calendarOffset(),
@@ -246,6 +247,7 @@ export default class AgendaView extends Component {
   UNSAFE_componentWillReceiveProps(props) {
     if (this.props.onArrowPress && !this.state.calendarScrollable) {
       this._chooseDayFromCalendar(props.selected);
+      
       this.calendar.scrollToDay(
         this.state.selectedDay.clone(),
         this.calendarOffset(),
@@ -278,6 +280,7 @@ export default class AgendaView extends Component {
     // in CalendarList listView, but that might impact performance when scrolling
     // month list in expanded CalendarList.
     // Further info https://github.com/facebook/react-native/issues/1831
+    
     this.calendar.scrollToDay(
       this.state.selectedDay,
       this.calendarOffset(),
@@ -336,6 +339,7 @@ export default class AgendaView extends Component {
     }
 
     this.setScrollPadPosition(this.initialScrollPadPosition(), true);
+    
     this.calendar.scrollToDay(day, this.calendarOffset(), true, amout => {
       this.setState({
         scrollAmount: this.viewHeight - HEADER_HEIGHT + 70 - amout,
@@ -385,6 +389,7 @@ export default class AgendaView extends Component {
   }
 
   onChangeDate = day => {
+    
     this.calendar.scrollToDay(day, this.calendarOffset(), true, amout => {
       this.setState({
         scrollAmount: this.viewHeight - HEADER_HEIGHT + 70 - amout,
@@ -396,7 +401,7 @@ export default class AgendaView extends Component {
   onDayChange(day) {
     const newDate = parseDate(day);
     const withAnimation = dateutils.sameMonth(newDate, this.state.selectedDay);
-
+    
     this.calendar.scrollToDay(day, this.calendarOffset(), withAnimation);
     this.setState({
       selectedDay: parseDate(day),
@@ -536,6 +541,7 @@ export default class AgendaView extends Component {
             }}>
             <CalendarList
               onLayout={() => {
+                
                 this.calendar.scrollToDay(
                   this.state.selectedDay.clone(),
                   this.calendarOffset(),
