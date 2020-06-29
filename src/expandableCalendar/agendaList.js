@@ -74,7 +74,7 @@ class AgendaList extends Component {
     if (this.list.current && sectionIndex !== undefined) {
       this.sectionScroll = true; // to avoid setDate() in onViewableItemsChanged
       this._topSection = this.props.sections[sectionIndex].title;
-
+     try {
       this.list.current.scrollToLocation({
         animated: true,
         sectionIndex: sectionIndex,
@@ -82,6 +82,8 @@ class AgendaList extends Component {
         viewPosition: 0, // position at the top
         viewOffset: commons.isAndroid ? this.sectionHeight : 0
       });
+     } catch (error) {
+     }
     }
   }
 
