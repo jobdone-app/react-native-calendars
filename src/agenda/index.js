@@ -150,7 +150,8 @@ export default class AgendaView extends Component {
     this.viewHeight = event.nativeEvent.layout.height;
     this.viewWidth = event.nativeEvent.layout.width;
     
-    this.calendar.scrollToDay(
+   try {
+      this.calendar.scrollToDay(
       this.state.selectedDay.clone(),
       this.calendarOffset(),
       false,
@@ -160,7 +161,11 @@ export default class AgendaView extends Component {
         });
       },
     );
-    this.forceUpdate();
+   } catch (error) {
+     
+   }
+   this.forceUpdate();
+
   }
 
   onTouchStart() {
@@ -248,12 +253,16 @@ export default class AgendaView extends Component {
     if (this.props.onArrowPress && !this.state.calendarScrollable) {
       this._chooseDayFromCalendar(props.selected);
       
-      this.calendar.scrollToDay(
-        this.state.selectedDay.clone(),
-        this.calendarOffset(),
-        false,
-        amount => {},
-      );
+      try {
+        this.calendar.scrollToDay(
+          this.state.selectedDay.clone(),
+          this.calendarOffset(),
+          false,
+          amount => {},
+        );
+      } catch (error) {
+        
+      }
     }
     if (props.items) {
       this.setState({
@@ -281,11 +290,15 @@ export default class AgendaView extends Component {
     // month list in expanded CalendarList.
     // Further info https://github.com/facebook/react-native/issues/1831
     
+   try {
     this.calendar.scrollToDay(
       this.state.selectedDay,
       this.calendarOffset(),
       true,
     );
+   } catch (error) {
+     
+   }
   }
 
   _chooseDayFromCalendar(d) {
@@ -346,11 +359,15 @@ export default class AgendaView extends Component {
 
     this.setScrollPadPosition(this.initialScrollPadPosition(), true);
     
-    this.calendar.scrollToDay(day, this.calendarOffset(), true, amout => {
-      this.setState({
-        scrollAmount: this.viewHeight - HEADER_HEIGHT + 70 - amout,
+    try {
+      this.calendar.scrollToDay(day, this.calendarOffset(), true, amout => {
+        this.setState({
+          scrollAmount: this.viewHeight - HEADER_HEIGHT + 70 - amout,
+        });
       });
-    });
+    } catch (error) {
+      
+    }
 
     if (this.props.loadItemsForMonth) {
       this.props.loadItemsForMonth(xdateToData(day));
@@ -396,19 +413,27 @@ export default class AgendaView extends Component {
 
   onChangeDate = day => {
     
-    this.calendar.scrollToDay(day, this.calendarOffset(), true, amout => {
-      this.setState({
-        scrollAmount: this.viewHeight - HEADER_HEIGHT + 70 - amout,
-        selectedDay: parseDate(day),
+    try {
+      this.calendar.scrollToDay(day, this.calendarOffset(), true, amout => {
+        this.setState({
+          scrollAmount: this.viewHeight - HEADER_HEIGHT + 70 - amout,
+          selectedDay: parseDate(day),
+        });
       });
-    });
+    } catch (error) {
+      
+    }
   };
 
   onDayChange(day) {
     const newDate = parseDate(day);
     const withAnimation = dateutils.sameMonth(newDate, this.state.selectedDay);
     
-    this.calendar.scrollToDay(day, this.calendarOffset(), withAnimation);
+    try {
+      this.calendar.scrollToDay(day, this.calendarOffset(), withAnimation);
+    } catch (error) {
+      
+    }
     this.setState({
       selectedDay: parseDate(day),
     });
@@ -548,16 +573,20 @@ export default class AgendaView extends Component {
             <CalendarList
               onLayout={() => {
                 
-                this.calendar.scrollToDay(
-                  this.state.selectedDay.clone(),
-                  this.calendarOffset(),
-                  false,
-                  amount =>
-                    this.setState({
-                      scrollAmount:
-                        this.viewHeight - HEADER_HEIGHT + 70 - amount,
-                    }),
-                );
+                try {
+                  this.calendar.scrollToDay(
+                    this.state.selectedDay.clone(),
+                    this.calendarOffset(),
+                    false,
+                    amount =>
+                      this.setState({
+                        scrollAmount:
+                          this.viewHeight - HEADER_HEIGHT + 70 - amount,
+                      }),
+                  );
+                } catch (error) {
+                  
+                }
               }}
               calendarWidth={this.viewWidth}
               calendarHeight={this.viewHeight}

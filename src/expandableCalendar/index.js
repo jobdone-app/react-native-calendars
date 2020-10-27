@@ -141,7 +141,12 @@ class ExpandableCalendar extends Component {
     if (this.calendar) {
       
       if (!this.props.horizontal) {
+        try {
         this.calendar.scrollToDay(XDate(date), 0, true);
+          
+        } catch (error) {
+          
+        }
       } else if (this.getMonth(date) !== this.visibleMonth) { // don't scroll if the month is already visible
         this.calendar.scrollToMonth(XDate(date));
       }
