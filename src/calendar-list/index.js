@@ -140,18 +140,29 @@ class CalendarList extends Component {
       callback(scrollAmount);
     }
     setTimeout(() => {
-      this.listView.scrollToOffset({offset: scrollAmount, animated});
-      this.setState({forceUpdate : ' '});
+      if(this.listView && this.listView.scrollToOffset){
+        try {
+          this.listView.scrollToOffset({offset: scrollAmount, animated});
+        } catch (error) {
+          
+        }
+        this.setState({forceUpdate : ' '});
+      }
     }, 200);
   }
 
   scrollToMonth(m) {
+    if(this.listView && this.listView.scrollToOffset){
     const month = parseDate(m);
     const scrollTo = month || this.state.openDate;
     let diffMonths = Math.round(this.state.openDate.clone().setDate(1).diffMonths(scrollTo.clone().setDate(1)));
     const size = this.props.horizontal ? this.props.calendarWidth : this.props.calendarHeight;
     const scrollAmount = (size * this.props.pastScrollRange) + (diffMonths * size);
-    this.listView.scrollToOffset({offset: scrollAmount, animated: false});
+    try {
+      this.listView.scrollToOffset({offset: scrollAmount, animated: false});
+    } catch (error) {
+    }
+    }
   }
 
   UNSAFE_componentWillReceiveProps(props) {
