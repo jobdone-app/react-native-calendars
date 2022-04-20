@@ -183,6 +183,9 @@ class ReservationList extends Component {
   render() {
     return (
       <SectionList
+        onRefresh={this.props.onRefresh}
+        refreshControl={this.props.refreshControl}
+        refreshing={this.props.refreshing}
         ref={(c) => this.sectionListRef = c}
         scrollEventThrottle={100}
         onMoveShouldSetResponderCapture={() => {this.onListTouch(); return false;}}
